@@ -34,16 +34,23 @@ jobs:
           pip install --upgrade pip
           pip install "cython<3.0.0" "buildozer==1.5.0"
 
-      - name: Setup SDK and Tools
+      - name: Setup SDK, Tools and Android API 31
         run: |
           SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
           mkdir -p "$SDK_DIR/tools/bin"
           mkdir -p "$SDK_DIR/build-tools"
+          
+          # Copiem build-tools și cmdline-tools
           cp -r $ANDROID_HOME/build-tools/* "$SDK_DIR/build-tools/"
           cp -r $ANDROID_HOME/cmdline-tools "$SDK_DIR/"
+          
+          # Wrapper sdkmanager
           echo '#!/bin/bash' > "$SDK_DIR/tools/bin/sdkmanager"
           echo 'exec $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "$@"' >> "$SDK_DIR/tools/bin/sdkmanager"
           chmod +x "$SDK_DIR/tools/bin/sdkmanager"
+
+          # Instalăm platforma Android 31 cerută de Buildozer
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root="$SDK_DIR" "platforms;android-31" "platform-tools" || true
 
       - name: Build APK with Buildozer
         run: |
