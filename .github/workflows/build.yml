@@ -34,19 +34,15 @@ jobs:
           pip install --upgrade pip
           pip install "cython<3.0.0" "buildozer==1.5.0"
 
-      - name: Setup Android SDK Components
+      - name: Setup SDK and Tools
         run: |
           SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
           mkdir -p "$SDK_DIR/tools/bin"
-          
           mkdir -p "$SDK_DIR/build-tools"
           cp -r $ANDROID_HOME/build-tools/* "$SDK_DIR/build-tools/"
           cp -r $ANDROID_HOME/cmdline-tools "$SDK_DIR/"
-
-          cat << 'EOF' > "$SDK_DIR/tools/bin/sdkmanager"
-#!/bin/bash
-exec $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "$@"
-EOF
+          echo '#!/bin/bash' > "$SDK_DIR/tools/bin/sdkmanager"
+          echo 'exec $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "$@"' >> "$SDK_DIR/tools/bin/sdkmanager"
           chmod +x "$SDK_DIR/tools/bin/sdkmanager"
 
       - name: Build APK with Buildozer
