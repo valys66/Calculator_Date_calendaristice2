@@ -40,21 +40,20 @@ jobs:
           mkdir -p "$SDK_DIR/tools/bin"
           mkdir -p "$SDK_DIR/build-tools"
           
-          # Copiem build-tools și cmdline-tools
           cp -r $ANDROID_HOME/build-tools/* "$SDK_DIR/build-tools/"
           cp -r $ANDROID_HOME/cmdline-tools "$SDK_DIR/"
           
-          # Wrapper sdkmanager
           echo '#!/bin/bash' > "$SDK_DIR/tools/bin/sdkmanager"
           echo 'exec $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "$@"' >> "$SDK_DIR/tools/bin/sdkmanager"
           chmod +x "$SDK_DIR/tools/bin/sdkmanager"
 
-          # Instalăm platforma Android 31 cerută de Buildozer
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root="$SDK_DIR" "platforms;android-31" "platform-tools" || true
 
       - name: Build APK with Buildozer
         run: |
-          buildozer -v android debug
+          # Activăm compilarea pe 4 nuclee în paralel pentru accelerare
+          export P4A_NUM_CORES=4
+          buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
