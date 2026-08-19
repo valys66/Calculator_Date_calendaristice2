@@ -50,9 +50,11 @@ jobs:
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root="$SDK_DIR" "platforms;android-31" "platform-tools" || true
 
       - name: Build APK with Buildozer
+        env:
+          # Ignoră erorile stricte de format din librăriile C vechi precum libwebp
+          APP_CFLAGS: "-Wno-error=format-security -Wno-format-security"
+          P4A_NUM_CORES: 4
         run: |
-          # Activăm compilarea pe 4 nuclee în paralel pentru accelerare
-          export P4A_NUM_CORES=4
           buildozer android debug
 
       - name: Upload APK Artifact
