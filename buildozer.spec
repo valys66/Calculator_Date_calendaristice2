@@ -9,16 +9,10 @@ requirements = python3,kivy
 orientation = portrait
 fullscreen = 0
 
-# Setări stabile de Android SDK/NDK
-android.api = 31
+android.api = 33
 android.minapi = 24
-android.ndk = 23b
 android.archs = arm64-v8a
 android.accept_sdk_licenses = True
-
-# Dezactivăm modulele SDL de care nu avem nevoie pentru un calculator
-p4a.bootstrap = sdl2
-p4a.local_recipes = 
 
 [buildozer]
 log_level = 2
