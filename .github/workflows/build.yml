@@ -34,7 +34,7 @@ jobs:
           pip install --upgrade pip
           pip install "cython<3.0.0" "buildozer==1.5.0"
 
-      - name: Setup SDK, Tools and Android API 31
+      - name: Setup SDK and Tools
         run: |
           SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
           mkdir -p "$SDK_DIR/tools/bin"
@@ -51,9 +51,8 @@ jobs:
 
       - name: Build APK with Buildozer
         env:
-          # Ignoră erorile stricte de format din librăriile C vechi precum libwebp
-          APP_CFLAGS: "-Wno-error=format-security -Wno-format-security"
-          P4A_NUM_CORES: 4
+          USE_WEBP: "0"
+          APP_CFLAGS: "-Wno-error=format-security"
         run: |
           buildozer android debug
 
